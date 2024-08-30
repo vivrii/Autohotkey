@@ -7,7 +7,7 @@
 Return
 
 ^!p::
-    ChangeResolution(32,3440,1440,60)
+    ChangeResolution(32,5120,1440,60)
     ChangeResolution(32,5120,1440,240)
 Return
 
