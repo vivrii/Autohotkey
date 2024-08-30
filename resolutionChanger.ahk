@@ -1,4 +1,5 @@
 #Requires AutoHotkey v1.1.0+
+#SingleInstance Force
 
 ; turn off monitor
 ^!m::

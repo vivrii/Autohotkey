@@ -1,4 +1,6 @@
 ﻿#Persistent
+#SingleInstance Force
+
 SetTimer, friendRefreshTimer, 1800000
 
 friendRefreshTimer:

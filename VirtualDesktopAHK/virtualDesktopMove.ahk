@@ -1,4 +1,5 @@
 ﻿#Include OSDTIP.ahk
+#SingleInstance Force
 
 VDA_PATH := A_ScriptDir . ".\VirtualDesktopAccessor.dll"
 hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", VDA_PATH, "Ptr")
