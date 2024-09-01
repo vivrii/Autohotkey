@@ -43,6 +43,15 @@ usual windows hotkley for switching desktops to bring a window to accompany you)
 This shortcut is used to pin (up) / unpin (down) a window. It increments/decrements pin level (unpinned -> window pinned
  -> app pinned)
 
+## On WM_DISPLAYCHANGE
+
+### monitor count changed to be 1:
+Any pinned windows will be unpinned and sent to the first virtual desktop
+The ID of these will be stored in a list for later
+
+### monitor count changed to be > 1:
+Any ID found in the stored list, will be repinned
+
 # resolutionChanger.ahk
 
 ## Ctrl + Alt + M

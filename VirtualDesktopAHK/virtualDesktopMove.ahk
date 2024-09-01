@@ -1,39 +1,47 @@
 ﻿#Include OSDTIP.ahk
 #SingleInstance Force
+#Persistent
+
+; store the current monitor count
+global monitor_count := 0
+SysGet, monitor_count, MonitorCount
+global unPinnedWindows := []
+
+; watch event which will be triggered on display connect/disconnect
+; https://www.autohotkey.com/docs/v1/misc/SendMessageList.htm
+WM_DISPLAYCHANGE := 0x7E
+OnMessage(WM_DISPLAYCHANGE, "DisplayChangeCallback")
 
 VDA_PATH := A_ScriptDir . ".\VirtualDesktopAccessor.dll"
 hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", VDA_PATH, "Ptr")
 
 ; this will be indexed from 0 up to 1 - desktop count
-GetCurrentDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetCurrentDesktopNumber", "Ptr")
+global GetCurrentDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetCurrentDesktopNumber", "Ptr")
 ; count will be number of desktops (i.e. 1 + max desktop index)
-GetDesktopCountProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetDesktopCount", "Ptr")
-GoToDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GoToDesktopNumber", "Ptr")
-IsWindowOnDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsWindowOnDesktopNumber", "Ptr")
-MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "MoveWindowToDesktopNumber", "Ptr")
+global GetDesktopCountProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GetDesktopCount", "Ptr")
+global GoToDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "GoToDesktopNumber", "Ptr")
+global IsWindowOnDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsWindowOnDesktopNumber", "Ptr")
+global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "MoveWindowToDesktopNumber", "Ptr")
 
-IsPinnedWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsPinnedWindow", "Ptr")
-PinWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "PinWindow", "Ptr")
-UnPinWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "UnPinWindow", "Ptr")
-IsPinnedAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsPinnedApp", "Ptr")
-PinAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "PinApp", "Ptr")
-UnPinAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "UnPinApp", "Ptr")
+global IsPinnedWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsPinnedWindow", "Ptr")
+global PinWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "PinWindow", "Ptr")
+global UnPinWindowProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "UnPinWindow", "Ptr")
+global IsPinnedAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "IsPinnedApp", "Ptr")
+global PinAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "PinApp", "Ptr")
+global UnPinAppProc := DllCall("GetProcAddress", "Ptr", hVirtualDesktopAccessor, "AStr", "UnPinApp", "Ptr")
 
 GetDesktopCount() {
-    global GetDesktopCountProc
     count := DllCall(GetDesktopCountProc, "Int")
     return count
 }
 
 MoveCurrentWindowToDesktop(desktopNumber) {
-    global MoveWindowToDesktopNumberProc, GoToDesktopNumberProc
     WinGet, activeHwnd, ID, A
     DllCall(MoveWindowToDesktopNumberProc, "Ptr", activeHwnd, "Int", desktopNumber, "Int")
     DllCall(GoToDesktopNumberProc, "Int", desktopNumber)
 }
 
 GoToPrevDesktop() {
-    global GetCurrentDesktopNumberProc, GoToDesktopNumberProc
     current := DllCall(GetCurrentDesktopNumberProc, "Int")
     last_desktop := GetDesktopCount() - 1
     ; If current desktop is 0, go to last desktop
@@ -46,7 +54,6 @@ GoToPrevDesktop() {
 }
 
 GoToNextDesktop() {
-    global GetCurrentDesktopNumberProc
     current := DllCall(GetCurrentDesktopNumberProc, "Int")
     last_desktop := GetDesktopCount() - 1
     ; If current desktop is last, go to first desktop
@@ -60,7 +67,6 @@ GoToNextDesktop() {
 
 ; no pin -> window pin -> app pin
 IncrementPin() {
-    global IsPinnedAppProc, IsPinnedWindowProc, PinWindowProc, PinAppProc
     WinGet, activeHwnd, ID, A
 
     window_pinned := DllCall(IsPinnedWindowProc, "Ptr", activeHwnd, "Int")
@@ -82,7 +88,6 @@ IncrementPin() {
 
 ; app pin -> window pin -> no pin
 DecrementPin() {
-    global IsPinnedAppProc, IsPinnedWindowProc, UnPinAppProc, UnPinWindowProc, PinWindowProc
     WinGet, activeHwnd, ID, A
 
     app_pinned := DllCall(IsPinnedAppProc, "Ptr", activeHwnd, "Int")
@@ -101,6 +106,52 @@ DecrementPin() {
             OSDTIP_Alert("Decrement Pin", "unpinned window", -500)
         }
     }
+}
+
+; if monitor count has changed, store new count and pin/unpin windows
+; TODO:
+; hotkey to toggle between having this option enabled and not doing this:
+;   * any window on a non primary screen should be automatically pinned
+;   * when moved to primary, it should be unpinned
+DisplayChangeCallback(wParam, lParam)
+{
+    SysGet, current_monitor_count, MonitorCount
+
+    if (current_monitor_count != monitor_count) {
+        monitor_count := current_monitor_count
+        if (monitor_count = 1) {
+            unPinWindowsToFirst()
+        } else if (monitor_count > 1) {
+            rePinWindowsFromList()
+        }
+    }
+}
+
+;   * find all pinned windows and unpin them and send them to virtual desktop 0
+;   * log the apps that got unpinned
+unPinWindowsToFirst() {
+    WinGet windows, List
+    Loop %windows% {
+        activeHwnd := windows%A_Index%
+        windows_pinned := DllCall(IsPinnedWindowProc, "Ptr", activeHwnd, "Int")
+
+        if (windows_pinned = 1) {
+            ; window is pinned so add to list, un pin, send to first virtual desktop
+            ; DllCall(UnPinWindowProc, "Ptr", activeHwnd, "Int")
+            DllCall(MoveWindowToDesktopNumberProc, "Ptr", activeHwnd, "Int", 0, "Int")
+            unPinnedWindows.Push(activeHwnd)
+        }
+    }
+}
+
+;   * use the log to set apps back to being pinned
+;   * move them to full screen on second display
+rePinWindowsFromList() {
+    for key, activeHwnd in unPinnedWindows {
+        DllCall(PinWindowProc, "Ptr", activeHwnd, "Int")
+    }
+
+    unPinnedWindows := []
 }
 
 ^#+Left::
