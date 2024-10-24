@@ -46,6 +46,10 @@ usual windows hotkley for switching desktops to bring a window to accompany you)
 This shortcut is used to pin (up) / unpin (down) a window. It increments/decrements pin level (unpinned -> window pinned
  -> app pinned)
 
+## Win + [1-9, 0]
+This shortcut will immediately switch to the desktop at an index represented by the number pressed.
+Uses the key order so 1 == index 0 and 0 == index 10.
+
 ## On WM_DISPLAYCHANGE
 
 ### monitor count changed to be 1:
