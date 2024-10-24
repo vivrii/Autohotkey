@@ -18,6 +18,9 @@ open windows terminal, that's it
 open windows terminal, that's it ---UNLESS you have a valid path copied in ur clipboard, then you open a terminal at 
 that location---
 
+## Win + Shift + G
+same as Win + Shift + T however the terminal is opened to the profile named: "Git Bash"
+
 ## Win + Shift + V
 acts on the contents of the clipboard, so far only supports local files and "urls"
 
@@ -79,3 +82,4 @@ OSDTIP.ahk comes from https://www.autohotkey.com/boards/viewtopic.php?f=6&t=7688
 toast notifications.
 
 virtualDesktopMove.ahk is brought to you by https://github.com/Ciantic/VirtualDesktopAccessor/
+

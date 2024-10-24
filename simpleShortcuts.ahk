@@ -12,9 +12,21 @@
 {
     path := get_path_from_clipboard()
     if path
-        Run "wt.exe --startingDirectory " path
+        Run "wt.exe --startingDirectory " "`"" path "`"" 
     else Run "wt.exe"
 }
+
+; win + shit + g
+; if the clipboard item is a file/folder present on the system, open a git bash terminal at that location
+#+g::
+{
+    path := get_path_from_clipboard()
+    if path
+        Run "wt.exe -p `"Git Bash`" --startingDirectory " "`"" path "`"" 
+    else Run "wt.exe -p `"Git Bash`""
+}
+
+
 
 ; win + shift + v
 ; if the clipboard item is a file present on the computer (or directory) run it
@@ -52,3 +64,4 @@ get_path_from_clipboard() {
         }
     }
 }
+
