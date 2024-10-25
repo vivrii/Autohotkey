@@ -158,12 +158,19 @@ Numbers := ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 for index, number in Numbers
 {
     Hotkey, #%number%, GoToDesktopNumberHotkey
+    Hotkey, #+%number%, MoveToDesktopNumberHotkey
 }
 
 GoToDesktopNumberHotkey() {
     key := SubStr(A_ThisHotkey, 2)
     index := InStr("1234567890", key)
     DllCall(GoToDesktopNumberProc, "Int", index - 1)
+}
+
+MoveToDesktopNumberHotkey() {
+    key := SubStr(A_ThisHotkey, 3)
+    index := InStr("1234567890", key)
+    MoveCurrentWindowToDesktop(index - 1)
 }
 
 ^#+Left::

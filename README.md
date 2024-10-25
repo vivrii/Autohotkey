@@ -50,6 +50,10 @@ This shortcut is used to pin (up) / unpin (down) a window. It increments/decreme
 This shortcut will immediately switch to the desktop at an index represented by the number pressed.
 Uses the key order so 1 == index 0 and 0 == index 10.
 
+## Win + Shift + [1-9, 0]
+This shortcut will immediately switch to the desktop at an index represented by the number pressed while also bringing the currently focused window with you.
+Uses the key order so 1 == index 0 and 0 == index 10.
+
 ## On WM_DISPLAYCHANGE
 
 ### monitor count changed to be 1:
