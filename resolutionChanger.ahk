@@ -1,6 +1,10 @@
 #Requires AutoHotkey v1.1.0+
 #SingleInstance Force
 
+#Include, readConfig.ahk
+
+config := ReadConfigSection("resolutionChanger")
+
 ; turn off monitor
 ^!m::
     Sleep 1000
@@ -8,8 +12,8 @@
 Return
 
 ^!p::
-    ChangeResolution(32,5120,1440,60)
-    ChangeResolution(32,5120,1440,240)
+    ChangeResolution(32,config["screenWidthPx"],config["screenHeightPx"],config["lowHz"])
+    ChangeResolution(32,config["screenWidthPx"],config["screenHeightPx"],config["highHz"])
 Return
 
 ChangeResolution( cD, sW, sH, rR )
