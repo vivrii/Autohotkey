@@ -18,6 +18,11 @@
 
 ; win + shit + g
 ; if the clipboard item is a file/folder present on the system, open a git bash terminal at that location
+;
+;   ~ REQUIRES ~
+;       adding a profile called "Git Bash" to windows terminal
+;       setting Command line to "C:\Program Files\Git\bin\bash.exe" or similar
+;       and optionally, set Icon to "C:\Program Files\Git\git-bash.exe" (show all files in the dialog and it will work)
 #+g::
 {
     path := get_path_from_clipboard()
