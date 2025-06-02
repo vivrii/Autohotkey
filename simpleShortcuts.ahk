@@ -38,7 +38,7 @@
 ; if the clipboard item begins like a url, open it
 #+v::
 {
-    clipped := A_Clipboard
+    clipped := RegexReplace(A_Clipboard, "^\s+|\s+$")
 
     pattern := "(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'.,<>?«»“”‘’]))"
  
@@ -54,7 +54,7 @@
 }
 
 get_path_from_clipboard() {
-    clipped := A_Clipboard
+    clipped := RegexReplace(A_Clipboard, "^\s+|\s+$")
  
     if (exists_val := FileExist(clipped))
     {
