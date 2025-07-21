@@ -70,3 +70,24 @@ get_path_from_clipboard() {
     }
 }
 
+; ctrl + alt + del
+^!Delete::
+{
+    Run("shutdown /s /t 0")
+}
+
+; ctrl + alt + shift + Del
+^!+Delete::
+{
+    if MsgBox("Make Windows default before rebooting?", "Switch Boot Target", "YesNo Icon?") = "Yes"
+    {
+        Run('*RunAs cmd.exe /c "bcdedit /set {fwbootmgr} bootsequence {42a46931-0404-11f0-bf98-806e6f6e6963}"')
+    }
+    Run("shutdown /r /t 0")
+}
+
+; ctrl + alt + shift + win + Del
+^!+#Delete::
+{
+    Run('*RunAs cmd.exe /c "bcdedit /set {fwbootmgr} bootsequence {a60636e1-932b-11ed-bd63-806e6f6e6963} && shutdown /r /t 0"')
+}

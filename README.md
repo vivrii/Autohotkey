@@ -33,6 +33,24 @@ acts on the contents of the clipboard, so far only supports local files and "url
 - although in python this regex finds all urls, I could only get it to find the first one properly, ideally it would 
 open all urls in the clipboard... **TODO**
 
+## Ctrl + Alt + Delete
+shutdown windows IMMEDIATELY
+
+## Ctrl + Alt + Shift + Delete
+reboot windows
+prompts asking set windows as the default boot option
+- need to set the id to your own windows identifier
+- use `bcdedit /enum firmware` to find yours today
+
+~ **TODO: need to make this a config file thing**
+
+## Ctrl + Alt + Shift + Delete
+reboot windows into an alternative boot option
+- need to set the id to your own "alternative boot option" identifier
+- use `bcdedit /enum firmware` again to find yours today
+
+~ **TODO: need to make this a config file thing**
+
 # virtualDesktopMove.ahk
 This uses https://github.com/Ciantic/VirtualDesktopAccessor/ which can be downloaded 
 [here](https://github.com/Ciantic/VirtualDesktopAccessor/releases/latest/download/VirtualDesktopAccessor.dll) 
