@@ -73,6 +73,7 @@ This shortcut will immediately switch to the desktop at an index represented by 
 Uses the key order so 1 == index 0 and 0 == index 10.
 
 ## On WM_DISPLAYCHANGE
+> Note: this is currently commented out and won't function without modification
 
 ### monitor count changed to be 1:
 Any pinned windows will be unpinned and sent to the first virtual desktop

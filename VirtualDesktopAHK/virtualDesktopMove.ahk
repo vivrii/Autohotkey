@@ -9,8 +9,8 @@ global unPinnedWindows := []
 
 ; watch event which will be triggered on display connect/disconnect
 ; https://www.autohotkey.com/docs/v1/misc/SendMessageList.htm
-WM_DISPLAYCHANGE := 0x7E
-OnMessage(WM_DISPLAYCHANGE, "DisplayChangeCallback")
+; WM_DISPLAYCHANGE := 0x7E
+; OnMessage(WM_DISPLAYCHANGE, "DisplayChangeCallback")
 
 VDA_PATH := A_ScriptDir . ".\VirtualDesktopAccessor.dll"
 hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", VDA_PATH, "Ptr")
