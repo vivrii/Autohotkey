@@ -39,10 +39,12 @@ open all urls in the clipboard... **TODO**
 - if the user confirms, a uniquely named windows terminal will spawn and upon detection (with a 3s timeout) ahk will paste and execute the contents
 
 ## Win + Shift + ~
-Registers the active window as the "secret" window
+Registers the active window as the "secret" window  
+Stores the window id in a temporary file so upon script restart, the selection can be restored (so windows don't need to be lost)  
+Restores the previous window if hidden upon registering a new window (for the same reason)
 
 ## Win + ~
-Toggles maximise/minimise on the "secret" window
+Toggles show/hide on the "secret" window
 
 ## Ctrl + Alt + Delete
 shutdown windows IMMEDIATELY
