@@ -33,6 +33,11 @@ acts on the contents of the clipboard, so far only supports local files and "url
 - although in python this regex finds all urls, I could only get it to find the first one properly, ideally it would 
 open all urls in the clipboard... **TODO**
 
+### anything else:
+- anything that don't trigger the above conditions, will allow the user to run in powershell
+- a confirmation message box will appear showing the clipboard contents which will be ran
+- if the user confirms, a uniquely named windows terminal will spawn and upon detection (with a 3s timeout) ahk will paste and execute the contents
+
 ## Ctrl + Alt + Delete
 shutdown windows IMMEDIATELY
 

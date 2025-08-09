@@ -40,7 +40,7 @@
 {
     clipped := RegexReplace(A_Clipboard, "^\s+|\s+$")
 
-    pattern := "(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'.,<>?«»“”‘’]))"
+    pattern := "(?i)\b((?:(?!env:)[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'.,<>?«»“”‘’]))"
  
     if (exists_val := FileExist(clipped))
     {
@@ -50,6 +50,21 @@
     else if (RegExMatch(clipped, pattern, &urls))
     {
         Run urls[0]
+    }
+
+    else if MsgBox("Would you like to run the following clipboard contents in powershell?`n`n" clipped, "clipped runner", "YesNo Icon?") = "Yes"
+    {
+        uniqueTitle := "WT_" . A_TickCount
+        Run("wt.exe --title " uniqueTitle)
+        if (WinWait(uniqueTitle, , 3))
+        {
+            WinActivate(uniqueTitle)
+            Send(clipped "`n")
+        }
+        else
+        {
+            MsgBox("", "didn't find windows terminal...", 0)
+        }
     }
 }
 
