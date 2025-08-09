@@ -85,6 +85,45 @@ get_path_from_clipboard() {
     }
 }
 
+global secretWindow := 0
+; doesn't exactly work when on another desktop,
+; detect hidden allows it to act, but it wont restore to a different virtual desktop
+; may move this into virtual desktop
+; DetectHiddenWindows(true)
+
+; win + shift + ~
+; register the active window as the secret window
+#+`::
+{
+    global secretWindow := WinExist("A")
+    if secretWindow
+    {
+        process := WinGetProcessName("ahk_id" secretWindow)
+        TrayTip(process, "secret window set", 0)
+    }
+}
+
+; win + ~
+; toggle minimise/restore on the secret window
+#`::
+{
+    if WinExist("ahk_id" secretWindow)
+    {
+        if (WinGetMinMax("ahk_id" secretWindow) == -1)
+        {
+            WinRestore("ahk_id" secretWindow)
+        }
+        else
+        {
+            WinMinimize("ahk_id" secretWindow)
+        }
+    }
+    else
+    {
+        TrayTip("", "no secret window...", 0)
+    }
+}
+
 ; ctrl + alt + del
 ^!Delete::
 {

@@ -38,6 +38,12 @@ open all urls in the clipboard... **TODO**
 - a confirmation message box will appear showing the clipboard contents which will be ran
 - if the user confirms, a uniquely named windows terminal will spawn and upon detection (with a 3s timeout) ahk will paste and execute the contents
 
+## Win + Shift + ~
+Registers the active window as the "secret" window
+
+## Win + ~
+Toggles maximise/minimise on the "secret" window
+
 ## Ctrl + Alt + Delete
 shutdown windows IMMEDIATELY
 
